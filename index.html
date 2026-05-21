@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battery Report Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            background: #020617;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .summary {
+            margin: 20px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 12px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+🔋 Battery Report Dashboard
+</header>
+
+<div class="summary">
+    <b>Summary:</b><br><br>
+    
+    ✅ Your battery is in <b>excellent condition</b>.<br><br>
+    
+    Based on your latest report:
+    <ul>
+        <li>Very low cycle count → almost new</li>
+        <li>Full charge capacity is equal or higher than design → no degradation</li>
+        <li>No signs of battery wear or weakness</li>
+    </ul>
+
+    💡 <b>Conclusion:</b><br>
+    Your battery is <b>strong, healthy, and performing above normal expectations</b>.  
+    No action needed.
+</div>
+
+<div class="container">
+    <iframe src="battery-report.html"></iframe>
+</div>
+
+</body>
+</html>
