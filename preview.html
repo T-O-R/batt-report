@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battery Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            background: #020617;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .card p {
+            font-size: 22px;
+            margin: 10px 0 0;
+            font-weight: bold;
+        }
+
+        .good { color: #22c55e; }
+        .warn { color: #f59e0b; }
+        .bad { color: #ef4444; }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 12px;
+            background: #111;
+        }
+
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    🔋 Battery Health Dashboard (Auto)
+</header>
+
+<div class="grid">
+
+    <div class="card">
+        <h3>Battery Health</h3>
+        <p id="health">Loading...</p>
+    </div>
+
+    <div class="card">
+        <h3>Full Charge Capacity</h3>
+        <p id="full">Loading...</p>
+    </div>
+
+    <div class="card">
+        <h3>Design Capacity</h3>
+        <p id="design">Loading...</p>
+    </div>
+
+    <div class="card">
+        <h3>Cycle Count</h3>
+        <p id="cycle">Loading...</p>
+    </div>
+
+</div>
+
+<div class="container">
+    <iframe src="battery-report.html"></iframe>
+</div>
+
+<script>
+fetch('battery-report.html')
+    .then(res => res.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const getValue = (label) => {
+            const cells = [...doc.querySelectorAll('td')];
+            for (let i = 0; i < cells.length; i++) {
+                if (cells[i].innerText.includes(label)) {
+                    return cells[i + 1]?.innerText.trim();
+                }
+            }
+            return null;
+        };
+
+        const full = getValue('FULL CHARGE CAPACITY');
+        const design = getValue('DESIGN CAPACITY');
+        const cycle = getValue('CYCLE COUNT');
+
+        document.getElementById('full').innerText = full || 'N/A';
+        document.getElementById('design').innerText = design || 'N/A';
+        document.getElementById('cycle').innerText = cycle || 'N/A';
+
+        if (full && design) {
+            const fullVal = parseInt(full.replace(/[^0-9]/g, ''));
+            const designVal = parseInt(design.replace(/[^0-9]/g, ''));
+
+            const health = Math.round((fullVal / designVal) * 100);
+
+            const healthEl = document.getElementById('health');
+            healthEl.innerText = health + '%';
+
+            if (health >= 95) {
+                healthEl.className = 'good';
+            } else if (health >= 85) {
+                healthEl.className = 'warn';
+            } else {
+                healthEl.className = 'bad';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
